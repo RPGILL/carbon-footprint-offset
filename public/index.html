@@ -11,6 +11,7 @@
         <h1>Offset Your Carbon Footprint</h1>
         <p>Take action to reduce your impact on the planet.</p>
     </header>
+    
     <section id="calculator">
         <h2>Calculate Your Carbon Footprint</h2>
         <label for="miles">Miles driven per week:</label>
@@ -30,29 +31,49 @@
         </form>
         <p id="formMessage"></p>
     </section>
-    
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"></script>
+
     <script>
+        // ✅ Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCIjHET2VCq9TDsu0bOJf3E-rAs41tyBe4",
+            authDomain: "carbonfootprintapp-c700c.firebaseapp.com",
+            databaseURL: "https://carbonfootprintapp-c700c-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "carbonfootprintapp-c700c",
+            storageBucket: "carbonfootprintapp-c700c.firebasestorage.app",
+            messagingSenderId: "585165082022",
+            appId: "1:585165082022:web:f9ae58077bbebba13b9367"
+        };
+
+        // ✅ Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // ✅ Carbon Footprint Calculator
         function calculateOffset() {
             const miles = document.getElementById('miles').value;
             const emissions = miles * 0.411; // Avg. CO2 emission per mile
             document.getElementById('result').innerText = `Your weekly CO2 emissions: ${emissions.toFixed(2)} kg`;
         }
 
+        // ✅ Form Submission - Save Data to Firebase
         document.getElementById("interestForm").addEventListener("submit", function(event) {
             event.preventDefault();
+            
             const name = document.getElementById("name").value;
             const email = document.getElementById("email").value;
-            const scriptURL = "https://script.google.com/macros/s/AKfycbwMNl43A3bELwhUpRkXlqfSki9ZuD5yoAH_n-Xk1PPTVaGNTQecf1AZ2gDn0iWPm7Bn/exec";
-            
-            fetch(scriptURL, { 
-                method: 'POST',
-                body: new FormData(document.getElementById("interestForm"))
-            })
-            .then(response => {
+
+            database.ref("users").push({
+                name: name,
+                email: email,
+                timestamp: new Date().toISOString()
+            }).then(() => {
                 document.getElementById("formMessage").innerText = "Thank you for showing interest!";
                 document.getElementById("interestForm").reset();
-            })
-            .catch(error => console.error('Error!', error.message));
+            }).catch(error => console.error('Error!', error));
         });
     </script>
 </body>
