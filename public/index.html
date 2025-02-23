@@ -18,12 +18,42 @@
         <button onclick="calculateOffset()">Calculate</button>
         <p id="result"></p>
     </section>
+    
+    <section id="interest-form">
+        <h2>Show Your Interest</h2>
+        <form id="interestForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" required>
+            <button type="submit">Submit</button>
+        </form>
+        <p id="formMessage"></p>
+    </section>
+    
     <script>
         function calculateOffset() {
             const miles = document.getElementById('miles').value;
             const emissions = miles * 0.411; // Avg. CO2 emission per mile
             document.getElementById('result').innerText = `Your weekly CO2 emissions: ${emissions.toFixed(2)} kg`;
         }
+
+        document.getElementById("interestForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const scriptURL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+            
+            fetch(scriptURL, { 
+                method: 'POST',
+                body: new FormData(document.getElementById("interestForm"))
+            })
+            .then(response => {
+                document.getElementById("formMessage").innerText = "Thank you for showing interest!";
+                document.getElementById("interestForm").reset();
+            })
+            .catch(error => console.error('Error!', error.message));
+        });
     </script>
 </body>
 </html>
