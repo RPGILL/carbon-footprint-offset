@@ -33,51 +33,58 @@
     </section>
 
     <!-- ✅ Correct Firebase CDN -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"></script>
 
     <script>
-        // ✅ Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCIjHET2VCq9TDsu0bOJf3E-rAs41tyBe4",
-            authDomain: "carbonfootprintapp-c700c.firebaseapp.com",
-            databaseURL: "https://carbonfootprintapp-c700c-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "carbonfootprintapp-c700c",
-            storageBucket: "carbonfootprintapp-c700c.firebasestorage.app",
-            messagingSenderId: "585165082022",
-            appId: "1:585165082022:web:f9ae58077bbebba13b9367"
-        };
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("📌 DOM fully loaded, initializing Firebase...");
 
-        // ✅ Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+            // ✅ Firebase Configuration
+            const firebaseConfig = {
+                apiKey: "AIzaSyCIjHET2VCq9TDsu0bOJf3E-rAs41tyBe4",
+                authDomain: "carbonfootprintapp-c700c.firebaseapp.com",
+                databaseURL: "https://carbonfootprintapp-c700c-default-rtdb.europe-west1.firebasedatabase.app",
+                projectId: "carbonfootprintapp-c700c",
+                storageBucket: "carbonfootprintapp-c700c.firebasestorage.app",
+                messagingSenderId: "585165082022",
+                appId: "1:585165082022:web:f9ae58077bbebba13b9367"
+            };
 
-        // ✅ Carbon Footprint Calculator
-        function calculateOffset() {
-            const miles = document.getElementById('miles').value;
-            const emissions = miles * 0.411; // Avg. CO2 emission per mile
-            document.getElementById('result').innerText = `Your weekly CO2 emissions: ${emissions.toFixed(2)} kg`;
-        }
+            // ✅ Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            const database = firebase.database();
+            console.log("✅ Firebase initialized successfully.");
 
-        // ✅ Form Submission - Save Data to Firebase
-        document.getElementById("interestForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            
-            const name = document.getElementById("name").value;
-            const email = document.getElementById("email").value;
+            // ✅ Carbon Footprint Calculator
+            function calculateOffset() {
+                const miles = document.getElementById('miles').value;
+                const emissions = miles * 0.411; // Avg. CO2 emission per mile
+                document.getElementById('result').innerText = `Your weekly CO2 emissions: ${emissions.toFixed(2)} kg`;
+            }
 
-            console.log("Submitting form... Name:", name, "Email:", email); // ✅ Log form data
+            window.calculateOffset = calculateOffset; // Make function accessible
 
-            database.ref("users").push({
-                name: name,
-                email: email,
-                timestamp: new Date().toISOString()
-            }).then(() => {
-                console.log("✅ Data successfully saved to Firebase!"); // ✅ Log success
-                document.getElementById("formMessage").innerText = "Thank you for showing interest!";
-                document.getElementById("interestForm").reset();
-            }).catch(error => {
-                console.error("❌ Error saving data:", error); // ❌ Log errors
+            // ✅ Form Submission - Save Data to Firebase
+            document.getElementById("interestForm").addEventListener("submit", function(event) {
+                event.preventDefault();
+                
+                const name = document.getElementById("name").value;
+                const email = document.getElementById("email").value;
+
+                console.log("📤 Submitting form... Name:", name, "Email:", email);
+
+                database.ref("users").push({
+                    name: name,
+                    email: email,
+                    timestamp: new Date().toISOString()
+                }).then(() => {
+                    console.log("✅ Data successfully saved to Firebase!");
+                    document.getElementById("formMessage").innerText = "Thank you for showing interest!";
+                    document.getElementById("interestForm").reset();
+                }).catch(error => {
+                    console.error("❌ Error saving data:", error);
+                });
             });
         });
     </script>
