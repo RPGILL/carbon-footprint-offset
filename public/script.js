@@ -19,7 +19,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log("📥 Data to Send:", { name, email }); // ✅ Check if data is captured
 
-        fetch("/submit-interest", {
+        fetch("https://carbon-footprint-offset.onrender.com/submit-interest", {  // ✅ Works on Render
+
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, email })
