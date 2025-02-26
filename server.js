@@ -34,11 +34,7 @@ const db = new sqlite3.Database("./carbon_footprint.db", (err) => {
         );
     }
 });
-// ✅ Debugging: Log Incoming Requests
-app.use((req, res, next) => {
-    console.log(`📥 Incoming request: ${req.method} ${req.url}`);
-    next();
-});
+
 // ✅ API Route to Save Data
 app.post("/submit-interest", (req, res) => {
     const { name, email } = req.body;
