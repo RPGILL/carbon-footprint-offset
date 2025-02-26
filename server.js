@@ -5,6 +5,8 @@ const path = require("path");
 
 const app = express();
 
+
+
 // ✅ Middleware
 app.use(express.json()); // Parse JSON data from frontend
 app.use(express.urlencoded({ extended: true })); // Parse form data
@@ -32,7 +34,11 @@ const db = new sqlite3.Database("./carbon_footprint.db", (err) => {
         );
     }
 });
-
+// ✅ Debugging: Log Incoming Requests
+app.use((req, res, next) => {
+    console.log(`📥 Incoming request: ${req.method} ${req.url}`);
+    next();
+});
 // ✅ API Route to Save Data
 app.post("/submit-interest", (req, res) => {
     const { name, email } = req.body;
@@ -69,6 +75,6 @@ app.get("/get-users", (req, res) => {
 
 // ✅ Start Server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, () => {
     console.log(`✅ Server running on http://localhost:${PORT}`);
 });
